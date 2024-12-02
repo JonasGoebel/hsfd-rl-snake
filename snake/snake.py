@@ -64,11 +64,17 @@ class SnakeGameAI:
         return self.get_state()
 
     def _place_food(self):
-        """Places food at a random location."""
-        return [
-            round(random.randrange(0, WIDTH - BLOCK_SIZE) / BLOCK_SIZE) * BLOCK_SIZE,
-            round(random.randrange(0, HEIGHT - BLOCK_SIZE) / BLOCK_SIZE) * BLOCK_SIZE
-        ]
+        food = None
+        while food is None:
+            food = [
+                round(random.randrange(0, WIDTH - BLOCK_SIZE) / BLOCK_SIZE) * BLOCK_SIZE,
+                round(random.randrange(0, HEIGHT - BLOCK_SIZE) / BLOCK_SIZE) * BLOCK_SIZE
+            ]
+            # Check if food position is on the snake
+            if food in self.snake:
+                food = None  # Reattempt placing food if it spawns on the snake
+        return food
+
 
     def step(self, action):
         """Takes an action and updates the game state."""
