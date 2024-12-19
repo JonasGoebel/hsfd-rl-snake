@@ -15,7 +15,7 @@ EPSILON_DECAY = 0.995
 MIN_EPSILON = 0.01
 BATCH_SIZE = 64
 MAX_MEMORY = 10000
-STATE_SIZE = 7
+STATE_SIZE = 9  # Updated to include step counter
 ACTION_SIZE = 4
 
 
@@ -50,18 +50,14 @@ class Agent:
         batch = random.sample(self.memory, BATCH_SIZE)
         states, actions, rewards, next_states, dones = zip(*batch)
 
-        # Ensure all data are numpy arrays of the correct shape
-        states = np.array(states, dtype=np.float32)
-        next_states = np.array(next_states, dtype=np.float32)
-
         # Convert to tensors
-        states = torch.tensor(states, dtype=torch.float32)
+        states = torch.tensor(np.array(states), dtype=torch.float32)
+        next_states = torch.tensor(np.array(next_states), dtype=torch.float32)
         actions = torch.tensor(actions, dtype=torch.long)
         rewards = torch.tensor(rewards, dtype=torch.float32)
-        next_states = torch.tensor(next_states, dtype=torch.float32)
         dones = torch.tensor(dones, dtype=torch.float32)
 
-        # Forward pass for Q-values
+        # Compute Q-values
         q_values = self.model(states).gather(1, actions.unsqueeze(1)).squeeze()
         next_q_values = self.model(next_states).max(1)[0]
         target_q_values = rewards + (1 - dones) * GAMMA * next_q_values

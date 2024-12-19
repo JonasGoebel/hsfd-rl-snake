@@ -57,8 +57,8 @@ def main():
             agent.save("snake_dqn_model.pth")
 
         # save the model every 100 episodes
-        # if (episode + 1) % 100 == 0:
-            # agent.save("snake_dqn_model.pth")
+        if (episode + 1) % 100 == 0:
+            agent.save("snake_dqn_model.pth")
 
 
 if __name__ == "__main__":
