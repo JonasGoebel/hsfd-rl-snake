@@ -1,3 +1,4 @@
+import click
 import pygame
 import time
 
@@ -11,7 +12,9 @@ BLOCK_SIZE_PIXELS = 50
 # number of blocks (width, height) for the board
 BOARD_SIZE_BLOCKS = (20, 10)
 
-def main():
+@click.command()
+@click.option('--train', is_flag=True, default=False, help="Train faster by skipping visualisation.")
+def main(train: bool):
     # initialize pygame
     pygame.init()
 
@@ -42,8 +45,9 @@ def main():
             state = next_state
             total_reward += reward
 
-            game.render()
-            time.sleep(0.1)
+            if not train:
+                game.render()
+                time.sleep(0.1)
 
         print(f"Episode {episode + 1}: Total Reward: {total_reward}")
 
